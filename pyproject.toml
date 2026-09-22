@@ -1,0 +1,37 @@
+[project]
+name = "claude-code-guardrails"
+version = "0.1.0"
+description = "Claude Codeの事故を、起きる前に機械で止めるフックの詰め合わせ"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { file = "LICENSE" }
+
+# 実行に外部の依存はありません。配る相手の環境を選ばないことを優先しています。
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "ruff>=0.6", "mypy>=1.10"]
+
+[tool.ruff]
+extend = "/Users/hiroakinishimine/Developer/lint-configs/ruff/ruff.toml"
+
+[tool.ruff.lint.per-file-ignores]
+# テストで外してよいかは「書き方を直せるか」で決めています。
+# 下はいずれも、書き方では消せないものです。
+"tests/**" = [
+    "S101",                      # テストでassertを書くのは正当です
+    "S105", "S106", "S107",      # テスト用の文字列をパスワードと誤判定します
+    "S603",                      # フックをプロセスとして起動するのがテストの本体です
+    "ARG001", "ARG005",          # pytestのfixtureは引数で受け取ることが実行そのものです
+    "PLR2004",                   # 期待値はその場に直接書くほうが読めます
+    "D101", "D102", "D103", "D104",  # テスト名そのものが説明になっています
+    "INP001",                    # テストの置き場に__init__.pyを置きません
+    "N801", "N802", "PLC2401",   # テスト名は日本語で書きます
+]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
