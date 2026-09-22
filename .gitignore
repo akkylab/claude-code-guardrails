@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+
+# 秘密が入るもの。このリポジトリの性質上、間違って入ると洒落にならないので
+# 広めに弾いています。
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+credentials.json
+service-account.json
+
+# macOS
+.DS_Store
+
+# ログ
+logs/
+*.log
