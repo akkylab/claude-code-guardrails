@@ -25,6 +25,7 @@ JSONにはコメントが書けないためです。
 from __future__ import annotations
 
 import argparse
+import copy
 import json
 import shutil
 import sys
@@ -139,7 +140,9 @@ def apply(settings: dict[str, Any], directory: Path, *, uninstall: bool) -> dict
         書き換えたあとの設定。元の辞書は変更しません。
 
     """
-    updated = json.loads(json.dumps(settings))
+    # 呼び出し元の辞書を書き換えないよう、深い複製を作ります。JSONへ直して
+    # 読み直す方法だと型が失われるので、copyを使います。
+    updated: dict[str, Any] = copy.deepcopy(settings)
 
     hooks = updated.setdefault("hooks", {})
     if not isinstance(hooks, dict):
@@ -199,13 +202,13 @@ def save(path: Path, settings: dict[str, Any]) -> None:
 def main() -> None:
     """スクリプトの入口。"""
     parser = argparse.ArgumentParser(
-        description="Claude Codeの設定へガードレールのフックを組み込みます。"
+        description="Claude Codeの設定へガードレールのフックを組み込みます。",
     )
     parser.add_argument(
-        "--dry-run", action="store_true", help="書き換えず、結果だけを表示します"
+        "--dry-run", action="store_true", help="書き換えず、結果だけを表示します",
     )
     parser.add_argument(
-        "--uninstall", action="store_true", help="組み込んだフックを外します"
+        "--uninstall", action="store_true", help="組み込んだフックを外します",
     )
     args = parser.parse_args()
 

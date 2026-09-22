@@ -10,7 +10,7 @@
 |---|---|---|
 | `SECRET_FILE_NAMES` | ファイルの名前 | `.env`・`.env.production`・`id_rsa` |
 | `SECRET_DUMP_COMMANDS` | コマンドの形そのもの | `gh auth token`・`stripe config --list` |
-| `DESTRUCTIVE_COMMANDS` | 取り返しのつかない操作 | `rm -rf`・`git reset --hard`・`git push --force` |
+| `_DESTRUCTIVE_RULES` | 取り返しのつかない操作 | `rm -rf`・`git reset --hard` |
 
 2番目が要るのは、ファイルのパスを引数に取らないのに秘密を吐くコマンドがある
 ためです。パスだけを見張っていても、これらは素通りします。
@@ -192,7 +192,10 @@ def secret_dump_reason(command: str) -> str:
     normalized = " ".join(command.split()).lower()
 
     for prefix, reason in SECRET_DUMP_COMMANDS.items():
-        if normalized.startswith(prefix) or f"| {prefix}" in normalized or f"; {prefix}" in normalized:
+        # パイプやセミコロンの後ろに現れる場合も拾います。`ls | gh auth token`
+        # のような書き方で素通りさせないためです。
+        appears_after_separator = f"| {prefix}" in normalized or f"; {prefix}" in normalized
+        if normalized.startswith(prefix) or appears_after_separator:
             return reason
 
     if normalized in BARE_ENV_DUMP_COMMANDS:

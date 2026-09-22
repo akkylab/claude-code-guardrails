@@ -32,7 +32,7 @@ from pathlib import Path
 # このファイルは絶対パスで起動されるため、パッケージの置き場を自分で通します。
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from guardrails import hook_io, patterns  # noqa: E402
+from guardrails import hook_io, patterns
 
 HOOK_NAME = "block-destructive-commands"
 
@@ -71,7 +71,7 @@ def main() -> None:
             # コマンドの全文は残しません。どの規則に当たったかだけを記録します。
             logger.info("止めました: 理由=%s", consequence)
             hook_io.block(
-                MESSAGE.format(consequence=consequence, alternative=alternative)
+                MESSAGE.format(consequence=consequence, alternative=alternative),
             )
 
     hook_io.allow()

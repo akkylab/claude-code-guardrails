@@ -35,7 +35,7 @@ from pathlib import Path
 # このファイルは絶対パスで起動されるため、パッケージの置き場を自分で通します。
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from guardrails import hook_io, patterns  # noqa: E402
+from guardrails import hook_io, patterns
 
 HOOK_NAME = "block-secret-file-access"
 
@@ -98,7 +98,8 @@ def _blocked_path_in_command(command: str) -> str:
     if not command:
         return ""
 
-    for token in _TOKEN_PATTERN.findall(command):
+    tokens: list[str] = _TOKEN_PATTERN.findall(command)
+    for token in tokens:
         if _is_blocked_path(token):
             return token
 

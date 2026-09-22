@@ -16,6 +16,16 @@ dev = ["pytest>=8.0", "ruff>=0.6", "mypy>=1.10"]
 extend = "/Users/hiroakinishimine/Developer/lint-configs/ruff/ruff.toml"
 
 [tool.ruff.lint.per-file-ignores]
+# T201（printの使用）は、標準出力へ出すこと自体が仕事のファイルだけ外します。
+# ライブラリに残ったデバッグ用のprintを見つけるための規則なので、下の2つには
+# 当てはまりません。
+#
+#   hook_io.py … 標準エラーへ理由を書くことが、ハーネスとの約束そのものです。
+#                 ここを消すと、止めた理由がClaude Codeへ伝わりません。
+#   install.py … 利用者が対話で実行するコマンドです。画面へ出すのが仕事です。
+"guardrails/hook_io.py" = ["T201"]
+"install.py" = ["T201"]
+
 # テストで外してよいかは「書き方を直せるか」で決めています。
 # 下はいずれも、書き方では消せないものです。
 "tests/**" = [

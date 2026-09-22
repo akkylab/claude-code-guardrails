@@ -28,7 +28,7 @@ from pathlib import Path
 # このファイルは絶対パスで起動されるため、パッケージの置き場を自分で通します。
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from guardrails import hook_io, patterns  # noqa: E402
+from guardrails import hook_io, patterns
 
 HOOK_NAME = "block-secret-dump-commands"
 

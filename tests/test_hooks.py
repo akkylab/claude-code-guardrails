@@ -117,12 +117,12 @@ class Test秘密のファイルへのアクセス:
         [DOTENV, f"{DOTENV}.production", "id_rsa", "credentials.json", ".netrc"],
     )
     def test_秘密のファイルを読もうとすると止まる(
-        self, filename: str, tmp_path: Path
+        self, filename: str, tmp_path: Path,
     ) -> None:
         assert run_hook(self.HOOK, read_file(f"/somewhere/{filename}"), tmp_path) == BLOCKED
 
     def test_コマンド経由で秘密のファイルを読もうとしても止まる(
-        self, tmp_path: Path
+        self, tmp_path: Path,
     ) -> None:
         assert run_hook(self.HOOK, bash(f"cat {DOTENV}"), tmp_path) == BLOCKED
 
@@ -139,7 +139,7 @@ class Test秘密のファイルへのアクセス:
         assert run_hook(self.HOOK, payload, tmp_path) == ALLOWED
 
     @pytest.mark.parametrize(
-        "path", ["/somewhere/README.md", "/somewhere/environment.ts", "/env/config.py"]
+        "path", ["/somewhere/README.md", "/somewhere/environment.ts", "/env/config.py"],
     )
     def test_関係のないファイルは通す(self, path: str, tmp_path: Path) -> None:
         assert run_hook(self.HOOK, read_file(path), tmp_path) == ALLOWED
